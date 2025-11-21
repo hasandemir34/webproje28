@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using stokprojesi1.Data;
@@ -5,11 +6,11 @@ using stokprojesi1.Models;
 
 namespace stokprojesi1.Controllers
 {
+    [Authorize] // Giriş yapmadan erişilemesin
     public class CategoryController : Controller
     {
         private readonly AppDbContext _context;
 
-        // Veritabanını buraya çağırıyoruz (Dependency Injection)
         public CategoryController(AppDbContext context)
         {
             _context = context;
@@ -30,19 +31,19 @@ namespace stokprojesi1.Controllers
 
         // 3. EKLEME İŞLEMİ - KAYDETME (Create - POST)
         [HttpPost]
-        [ValidateAntiForgeryToken] // Güvenlik için (Hackerlar form dolduramasın diye)
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(category);
-                await _context.SaveChangesAsync(); // Veritabanına kaydet
-                return RedirectToAction(nameof(Index)); // Listeye geri dön
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
         
-        // SİLME İŞLEMİ
+        // 4. SİLME İŞLEMİ
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _context.Categories.FindAsync(id);
