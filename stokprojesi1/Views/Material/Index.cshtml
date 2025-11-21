@@ -1,0 +1,39 @@
+@model IEnumerable<stokprojesi1.Models.Material>
+
+@{
+    ViewData["Title"] = "Malzemeler";
+}
+
+<div class="container mt-4">
+    <h2>🔨 Malzeme Listesi</h2>
+    <p>
+        <a asp-action="Create" class="btn btn-success">Yeni Malzeme Ekle</a>
+    </p>
+
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Malzeme Adı</th>
+                <th>Kategori</th>
+                <th>Stok Adedi</th>
+                <th>Fiyat</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <span class="badge bg-info text-dark">@item.Category?.Name</span>
+                    </td>
+                    <td>@item.StockQuantity</td>
+                    <td>@item.Price ₺</td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.MaterialId" class="btn btn-danger btn-sm" onclick="return confirm('Bu malzemeyi siliyor musun?');">Sil</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
