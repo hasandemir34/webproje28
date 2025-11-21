@@ -1,20 +1,31 @@
 using Microsoft.EntityFrameworkCore;
-using stokprojesi1.Data; // Senin DbContext'in burada
+using Microsoft.AspNetCore.Identity; // YENİ
+using stokprojesi1.Data;
 using stokprojesi1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. MVC Servisini Ekliyoruz (Hoca MVC istemişti)
+// 1. MVC Servisi
 builder.Services.AddControllersWithViews();
 
-// 2. Veritabanı Bağlantısını Ekliyoruz (SQL Server Ayarı)
-// Not: Connection string adının "DefaultConnection" olduğundan emin olacağız.
+// 2. Veritabanı Bağlantısı
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// 3. IDENTITY (ÜYELİK) SERVİSİ - YENİ EKLENDİ
+// Şifre kurallarını test kolay olsun diye basitleştirdik (3 karakter yeterli)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 3;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
+
 var app = builder.Build();
 
-// Hata yönetimi ve Güvenlik ayarları (Standart kalıp)
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -22,14 +33,14 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // CSS, JS dosyaları çalışsın diye
+app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization(); // Hoca yetkilendirme istemişti, bu dursun
+// 4. GÜVENLİK SIRALAMASI ÖNEMLİDİR (Önce Authentication, Sonra Authorization)
+app.UseAuthentication(); // YENİ: Kimsin sen?
+app.UseAuthorization();  // Yetkin var mı?
 
-// 3. Rota Ayarı (Site açılınca hangi sayfaya gitsin?)
-// Açılınca "Home" controller'ındaki "Index" sayfasına gider.
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -31,6 +31,7 @@
                     <td>@item.Price ₺</td>
                     <td>
                         <a asp-action="Delete" asp-route-id="@item.MaterialId" class="btn btn-danger btn-sm" onclick="return confirm('Bu malzemeyi siliyor musun?');">Sil</a>
+                        <a asp-action="Edit" asp-route-id="@item.MaterialId" class="btn btn-warning btn-sm">Düzenle</a>
                     </td>
                 </tr>
             }

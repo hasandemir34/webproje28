@@ -50,6 +50,47 @@ namespace stokprojesi1.Controllers
             return View(material);
         }
 
+
+
+        // GÜNCELLEME SAYFASI (Edit - GET)
+public async Task<IActionResult> Edit(int? id)
+{
+    if (id == null) return NotFound();
+
+    var material = await _context.Materials.FindAsync(id);
+    if (material == null) return NotFound();
+
+    ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", material.CategoryId);
+    return View(material);
+}
+
+// GÜNCELLEME İŞLEMİ (Edit - POST)
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Edit(int id, Material material)
+{
+    if (id != material.MaterialId) return NotFound();
+
+    if (ModelState.IsValid)
+    {
+        try
+        {
+            _context.Update(material);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_context.Materials.Any(e => e.MaterialId == material.MaterialId))
+                return NotFound();
+            else
+                throw;
+        }
+        return RedirectToAction(nameof(Index));
+    }
+    ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", material.CategoryId);
+    return View(material);
+}
+
         // SİLME İŞLEMİ
         public async Task<IActionResult> Delete(int id)
         {
