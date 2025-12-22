@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="container text-center mt-5">
+    <div class="jumbotron bg-light p-5 rounded">
+        <h1 class="display-4">Fabrika Stok Takip Sistemi</h1>
+        <p class="lead">Malzeme ve kategori yönetimi için geliştirilmiş web uygulaması</p>
+        <hr class="my-4">
+                                                    
+        @if (User.Identity != null && User.Identity.IsAuthenticated)// geçerli bir giriş mi kontrolü var
+        {
+            <p>Hoş geldin, <strong>@User.Identity.Name</strong>! </p>//kullanıcı ismini çektim ekrana verdim
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Kategoriler</h5>
+                            <p class="card-text">Malzeme kategorilerini görüntüle ve yönet</p>
+                            <a href="/Category" class="btn btn-primary">Kategorilere Git</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title"> Malzemeler</h5>
+                            <p class="card-text">Stok malzemelerini görüntüle ve düzenle</p>
+                            <a href="/Material" class="btn btn-success">Malzemelere Git</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>Sistemi kullanmak için lütfen giriş yapın.</p>
+            <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Login" role="button">Giriş Yap</a>
+            <a class="btn btn-success btn-lg" asp-controller="Account" asp-action="Register" role="button">Kayıt Ol</a>
+        }
+    </div>
+
+
+</div>
