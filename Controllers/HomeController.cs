@@ -10,8 +10,7 @@ namespace stokprojesi1.Controllers
             return View();
         }
 
-        // Hata Sayfası
-        public IActionResult Error()
+               public IActionResult Error()
         {
             return View();
         }
